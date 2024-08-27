@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration>
-	<Appenders>
-		<RollingFile name="RollingFileAppender" fileName="E:\appLog.log" filePattern="E:\appLog-%d{MM-dd-yyyy HH-mm-ss}.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} --- [%15.15t] %c : %m%n" />
+<Configuration status="WARN">
+    <Properties>
+        <!-- Local Path
+		<Property name="LOG_FILE_NAME_APP">E:\logs\app\appLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_APP">E:\logs\app\appLog-%i.log</Property>
+
+        <Property name="LOG_FILE_NAME_SPRING">E:\logs\spring\springLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_SPRING">E:\logs\spring\springLog-%i.log</Property>
+        -->
+        <!--Docker Container specific Path -->
+        <Property name="LOG_FILE_NAME_APP">/app/logs/appLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_APP">/app/logs/appLog-%i.log</Property>
+
+        <Property name="LOG_FILE_NAME_SPRING">/app/logs/springLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_SPRING">/app/logs/springLog-%i.log</Property>
+
+    </Properties>
+    <Appenders>
+		<RollingFile name="RollingFileAppender_SPRING" fileName="${LOG_FILE_NAME_SPRING}" filePattern="${LOG_FILE_PATTERN_SPRING}">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} --- [%t] %-5p %c : %m%n" />
             <Policies>
-                <SizeBasedTriggeringPolicy size="1 KB" />
+                <!-- Roll over when file size reaches 5 KB -->
+                <SizeBasedTriggeringPolicy size="100 KB" />
             </Policies>
-            <DefaultRolloverStrategy max="3" />
+            <DefaultRolloverStrategy max="100" />
         </RollingFile>
-	</Appenders>
-	<Loggers>
-		<Root level="TRACE">
-			<AppenderRef ref="RollingFileAppender"/>
-		</Root>
-	</Loggers>
+
+        <RollingFile name="RollingFileAppender_APP" fileName="${LOG_FILE_NAME_APP}" filePattern="${LOG_FILE_PATTERN_APP}">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} --- [%t] %-5p %c : %m%n" />
+            <Policies>
+                <!-- Roll over when file size reaches 5 KB -->
+                <SizeBasedTriggeringPolicy size="100 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="RollingFileAppender_SPRING"/>
+        </Root>
+        <Logger name="org.springframework" additivity="false">
+            <AppenderRef ref="RollingFileAppender_SPRING"/>
+        </Logger>
+        <Logger name="com.zaxxer" additivity="false">
+            <AppenderRef ref="RollingFileAppender_SPRING"/>
+        </Logger>
+        <Logger name="com" additivity="false">
+            <AppenderRef ref="RollingFileAppender_APP"/>
+        </Logger>
+    </Loggers>
 </Configuration>
