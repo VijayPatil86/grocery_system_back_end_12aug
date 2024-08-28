@@ -1,1 +1,43 @@
 swagger url: http://localhost:8081/swagger-ui/index.html
+
+docker -
+	application.properties -
+		spring.application.name=grocery-system
+		server.port=8081
+
+		spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+		spring.datasource.url=jdbc:postgresql://localhost:5432/grocery_system
+		spring.datasource.username=postgres
+		spring.datasource.password=postgres
+
+		spring.jpa.show-sql=true
+
+	log4j2.xml -
+		<Property name="LOG_FILE_NAME_APP">/app/logs/appLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_APP">/app/logs/appLog-%i.log</Property>
+
+        <Property name="LOG_FILE_NAME_SPRING">/app/logs/springLog.log</Property>
+        <Property name="LOG_FILE_PATTERN_SPRING">/app/logs/springLog-%i.log</Property>
+
+	Dockerfile:
+		FROM openjdk:17-oracle
+		ADD target/grocery-system-0.0.1-SNAPSHOT.jar grocery.jar
+		ADD src/main/resources/log4j2.xml log4j2.xml
+		ADD src/main/resources/application.properties application.properties
+		CMD ["java", "-jar", "grocery.jar" ]
+
+	Docker commands -
+		docker build -t grocery .
+		docker run -v E:/temp:/app -p 8086:8081 grocery
+		where,
+			8086: port specified in Browser
+			8081: spring boot app listening to
+
+	appLog.log -
+		2024-08-28 06:34:17.190 --- [main] INFO  com.GrocerySystemApplication : Starting GrocerySystemApplication v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/grocery.jar started by root in /)
+		2024-08-28 06:34:17.197 --- [main] DEBUG com.GrocerySystemApplication : Running with Spring Boot v3.3.2, Spring v6.1.11
+		2024-08-28 06:34:17.198 --- [main] INFO  com.GrocerySystemApplication : No active profile set, falling back to 1 default profile: "default"
+		2024-08-28 06:34:27.005 --- [main] INFO  com.GrocerySystemApplication : Started GrocerySystemApplication in 10.225 seconds (process running for 11.407)
+
+	Browser URL -
+		http://localhost:8086/api/suppliers
