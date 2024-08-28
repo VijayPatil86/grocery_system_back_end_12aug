@@ -41,3 +41,16 @@ docker -
 
 	Browser URL -
 		http://localhost:8086/api/suppliers
+
+case -
+	a Spring boot app listens on port 8081. It connects to Postgres database on port 5432.
+	when run, it connects and fetches the data from database.
+	Now, app is dockerized means it runs within the container environment. The database is still on host system, it is not dockerized.
+	When app running within container tries to connect to database running outside of container on host system, connection to database is refused.
+	how to make app in container talk to database on host system?
+	-->
+		Docker containers can access the host machine using a special IP address host.docker.internal which Docker provides as an alias to the host machine.
+		application.properties -
+			spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/your_database_name
+			host.docker.internal is replacement for localhost
+			it worked
