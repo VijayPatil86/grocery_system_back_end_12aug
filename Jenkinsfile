@@ -32,7 +32,7 @@ pipeline {
 	}
 	stage ('DOCKER_RUN') {
 	    steps {
-		bat "docker run -v E:/temp:/app -p 8086:8081 grocery"
+		bat "docker run -d -v E:/temp:/app -p 8086:8081 grocery"
 	    }
 	}
     }
