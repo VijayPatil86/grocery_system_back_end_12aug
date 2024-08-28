@@ -26,9 +26,8 @@ pipeline {
             }
         }
         stage ('DOCKER_BUILD') {
-			agent any
 			steps {
-				sh 'docker build . -t grocery'
+				bat "docker build . -t grocery"
 			}
 		}
     }
