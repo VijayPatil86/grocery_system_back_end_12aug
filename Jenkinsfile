@@ -25,5 +25,11 @@ pipeline {
                 bat "${PATH_MAVEN}mvn package"
             }
         }
+        stage ('DOCKER_BUILD') {
+			agent any
+			steps {
+				sh 'docker build . -t grocery'
+			}
+		}
     }
 }
