@@ -26,9 +26,14 @@ pipeline {
             }
         }
         stage ('DOCKER_BUILD') {
-			steps {
-				bat "docker build . -t grocery"
-			}
-		}
+	    steps {
+	        bat "docker build . -t grocery"
+	    }
+	}
+	stage ('DOCKER_RUN') {
+	    steps {
+		bat "docker run -v E:/temp:/app -p 8086:8081 grocery"
+	    }
+	}
     }
 }
